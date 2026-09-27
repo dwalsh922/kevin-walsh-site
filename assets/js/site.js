@@ -171,6 +171,7 @@
       vis.setAttribute('aria-hidden', 'true');
       const words = [], chars = [];
       [...el.childNodes].forEach(node => {
+        if (node.nodeType === 1 && node.tagName === 'BR') { vis.appendChild(document.createElement('br')); return; }
         const isEm = node.nodeType === 1 && node.tagName === 'EM';
         node.textContent.split(/(\s+)/).forEach(tok => {
           if (!tok) return;
