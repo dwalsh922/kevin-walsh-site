@@ -1,0 +1,6 @@
+# Preview address only: keep it out of Google while www.kevinwalshandassociates.com still serves the old site.
+https://:project.pages.dev/*
+  X-Robots-Tag: noindex
+
+/assets/frames/*
+  Cache-Control: public, max-age=31536000, immutable
