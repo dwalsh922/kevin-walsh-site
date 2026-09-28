@@ -188,10 +188,11 @@ main{position:relative;z-index:1}
 .sec.paper .fine{color:var(--t-paper-2)}
 
 /* ---------- 02 For solicitors ---------- */
-.sol-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(36px,6vw,100px);align-items:end}
+.sol-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(36px,6vw,100px);align-items:start}
+.sol-side{position:sticky;top:120px}
 .req{background:var(--paper-3);border:1px solid var(--hair-paper);border-radius:var(--radius);padding:clamp(22px,3vw,36px);box-shadow:0 30px 60px -40px rgba(21,32,38,.35)}
 .req-list{counter-reset:r}
-.req-list li{display:grid;grid-template-columns:auto 1fr;gap:1rem;align-items:baseline;padding:1rem 0;border-bottom:1px solid var(--hair-paper);font-size:1.08rem;line-height:1.45}
+.req-list li{display:grid;grid-template-columns:auto 1fr;gap:1rem;align-items:baseline;padding:1.35rem 0;border-bottom:1px solid var(--hair-paper);font-size:1.08rem;line-height:1.45}
 .req-list li:first-child{padding-top:0}
 .rq{display:inline-grid;place-items:center;width:1.8rem;height:1.8rem;border-radius:50%;border:1.5px solid var(--red);color:var(--red);font-size:.78rem;font-weight:500}
 .promise{display:flex;flex-wrap:wrap;gap:10px 26px;margin-top:1.4rem}
@@ -445,7 +446,7 @@ main{position:relative;z-index:1}
 }
 @media (max-width:980px){
   .sol-grid,.mark-grid,.faq-grid,.quote-grid,.ph-grid,.cols,.two-col{grid-template-columns:minmax(0,1fr)}
-  .faq-side,.cols>header{position:static}
+  .faq-side,.sol-side,.cols>header{position:static}
   .foot-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
   .foot-grid>div:first-child{grid-column:1/-1}
   .page-plate{max-width:560px;aspect-ratio:4/3.4}
