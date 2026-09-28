@@ -47,8 +47,8 @@
 {"@type":"Question","name":"Do you need payment up front?","acceptedAnswer":{"@type":"Answer","text":"No. There's no prepayment. You get a clear quote before any work starts."}},
 {"@type":"Question","name":"Are you insured?","acceptedAnswer":{"@type":"Answer","text":"Yes. All work is carried out by Kevin, an RIAI Architectural Technologist and MCIOB, with full Professional Indemnity cover."}},
 {"@type":"Question","name":"Do you work outside Dublin?","acceptedAnswer":{"@type":"Answer","text":"Yes. We're based in Swords and work with solicitors and property owners across Ireland."}},
-{"@type":"Question","name":"What if an extension was built without permission?","acceptedAnswer":{"@type":"Answer","text":"It's common, and it's usually fixable. Depending on the work, the route is an opinion of exemption, retention permission, or small works on site. We explain the options in plain words."}},
-{"@type":"Question","name":"Do you work directly with law firms?","acceptedAnswer":{"@type":"Answer","text":"Yes. Firms including Mason Hayes & Curran and PwC Ireland have relied on our mapping and certificates for property transactions."}}]}
+{"@type":"Question","name":"What if an extension was built without permission?","acceptedAnswer":{"@type":"Answer","text":"It's common, and it's usually fixable. Depending on the work, the route is an opinion of exemption or application for retention permission. We explain the options in plain words."}},
+{"@type":"Question","name":"Do you work directly with law firms?","acceptedAnswer":{"@type":"Answer","text":"Yes. Firms including Mason Hayes & Curran and PwC Ireland have relied on our compliance certification and mapping."}}]}
 ]}
 </script>
 </head>
@@ -125,7 +125,7 @@
       <div class="sol-side rv">
         <p class="kicker label rc"><span class="num">01</span><span class="tick"></span>For solicitors</p>
         <h2 class="h2 rc" id="sol-h" style="--i:1">Buying, selling, or re-mortgaging a property</h2>
-        <p class="lede rc" style="--i:2">When a buyer's solicitor raises a requisition on planning or Building Regulations, you need a document that closes it, not a conversation that drags on. That's the work Kevin has done for law firms since 1998.</p>
+        <p class="lede rc" style="--i:2">Solicitors and lenders will require certification confirming that a property complies with planning permission and building regulations. Kevin Walsh &amp; Associates can provide all necessary certification.</p>
       </div>
       <div class="req rv">
         <ol class="req-list">
@@ -156,7 +156,6 @@
           <div class="panel-copy rc" style="--i:1">
             <p class="label"><span class="num">01</span>Service</p>
             <h3>Planning permission</h3>
-            <p class="tagline">From first survey to final grant.</p>
             <p>Extensions, attic conversions, new homes and retention permission, drawn, lodged and followed through with the council.</p>
             <span class="go">Planning permission, explained <span class="arr" aria-hidden="true">→</span></span>
           </div>
@@ -166,7 +165,6 @@
           <div class="panel-copy rc" style="--i:1">
             <p class="label"><span class="num">02</span>Service</p>
             <h3>Certificates of compliance</h3>
-            <p class="tagline">Proof the building matches the paperwork.</p>
             <p>Signed opinions on planning and Building Regulations for sales, mortgages and requisitions on title.</p>
             <span class="go">How certificates work <span class="arr" aria-hidden="true">→</span></span>
           </div>
@@ -253,6 +251,33 @@
               <rect class="p-pier" x="476" y="512" width="8" height="16"/>
               <path class="z-line" pathLength="1" d="M404 502 H496 V534 H404 Z"/>
             </g>
+            <g class="zone" data-z="shed">
+              <rect class="z-fill" x="50" y="200" width="60" height="36"/>
+              <rect class="p-wall" x="50" y="200" width="60" height="36"/>
+              <path class="p-roof" d="M50 218 H110"/>
+              <path class="z-line" pathLength="1" d="M44 194 H116 V242 H44 Z"/>
+            </g>
+            <g class="zone" data-z="canopy">
+              <rect class="z-fill" x="250" y="120" width="80" height="26"/>
+              <rect class="p-canopy" x="250" y="120" width="80" height="26"/>
+              <path class="z-line" pathLength="1" d="M244 114 H336 V152 H244 Z"/>
+            </g>
+            <g class="zone" data-z="windows">
+              <rect class="z-fill" x="184" y="380" width="46" height="18"/>
+              <rect class="z-fill" x="336" y="380" width="46" height="18"/>
+              <rect class="p-win" x="190" y="386" width="34" height="8"/>
+              <rect class="p-win" x="342" y="386" width="34" height="8"/>
+              <path class="z-line" pathLength="1" d="M182 378 H232 V400 H182 Z M334 378 H384 V400 H334 Z"/>
+            </g>
+            <g class="zone" data-z="rooflights">
+              <rect class="z-fill" x="348" y="278" width="22" height="22"/>
+              <rect class="z-fill" x="336" y="336" width="22" height="22"/>
+              <rect class="p-win" x="352" y="282" width="14" height="14"/>
+              <path class="p-soft" d="M352 296 L366 282"/>
+              <rect class="p-win" x="340" y="340" width="14" height="14"/>
+              <path class="p-soft" d="M340 354 L354 340"/>
+              <path class="z-line" pathLength="1" d="M346 276 H372 V302 H346 Z M334 334 H360 V360 H334 Z"/>
+            </g>
             <path class="p-north" d="M556 470 l8 -26 l8 26 l-8 -7 z"/>
           </svg>
           <p class="plan-note label rc" style="--i:1">Plan for illustration</p>
@@ -270,6 +295,10 @@
             <button type="button" class="tog" data-z="elements" aria-pressed="false"><span class="box" aria-hidden="true"></span>Windows, doors, roof or walls</button>
             <button type="button" class="tog" data-z="entrance" aria-pressed="false"><span class="box" aria-hidden="true"></span>Site entrance</button>
             <button type="button" class="tog" data-z="surface" aria-pressed="false"><span class="box" aria-hidden="true"></span>Front garden paved over</button>
+            <button type="button" class="tog" data-z="shed" aria-pressed="false"><span class="box" aria-hidden="true"></span>Garden shed</button>
+            <button type="button" class="tog" data-z="canopy" aria-pressed="false"><span class="box" aria-hidden="true"></span>External canopy</button>
+            <button type="button" class="tog" data-z="windows" aria-pressed="false"><span class="box" aria-hidden="true"></span>Additional windows</button>
+            <button type="button" class="tog" data-z="rooflights" aria-pressed="false"><span class="box" aria-hidden="true"></span>Roof lights</button>
           </fieldset>
 
           <div class="needs rc" style="--i:1">
@@ -285,10 +314,14 @@
               <li data-z="elements" hidden><strong>Changes to building elements</strong><span>New windows or doors, a new roof, or external insulation. An opinion on whether it needed planning, since changes to how the house looks can need permission, plus an opinion on Building Regulations.</span></li>
               <li data-z="entrance" hidden><strong>Changes to the site entrance</strong><span>Planning permission, or an opinion that it was exempt. Widening an entrance onto a public road usually needs permission, and dishing the kerb needs the council's consent.</span></li>
               <li data-z="surface" hidden><strong>Front garden paved over</strong><span>An opinion that it was exempt. Replacing grass with tarmac or concrete is often exempt on its own, but not when the entrance was widened to go with it.</span></li>
+              <li data-z="shed" hidden><strong>Garden shed</strong><span>An opinion that it was exempt from planning, or the permission for it.</span></li>
+              <li data-z="canopy" hidden><strong>External canopy</strong><span>An opinion that it was exempt from planning, or the permission for it.</span></li>
+              <li data-z="windows" hidden><strong>Additional windows</strong><span>An opinion on whether the new openings needed planning permission, plus an opinion on compliance with Building Regulations.</span></li>
+              <li data-z="rooflights" hidden><strong>Roof lights</strong><span>An opinion on whether they needed planning permission, plus an opinion on compliance with Building Regulations.</span></li>
             </ul>
             <a class="btn btn-red needs-cta" href="#quote" id="mark-cta" hidden>Request these certificates <span class="arr" aria-hidden="true">→</span></a>
           </div>
-          <p class="fine rc" style="--i:2">A guide, not legal advice. Kevin confirms exactly what's needed once he has seen the property.</p>
+          <p class="fine rc" style="--i:2">A guide, not legal advice. We confirm exactly what's needed once we have seen the property.</p>
         </div>
       </div>
     </div>
@@ -315,8 +348,8 @@
             <figure><img src="/assets/img/step-2-site-inspection.jpg" alt="" width="900" height="900" loading="lazy"></figure>
             <span class="node" aria-hidden="true"></span>
             <span class="n mono">02</span>
-            <h3>Kevin visits the property</h3>
-            <p>He measures the building and checks it against the planning file and the drawings.</p>
+            <h3>We visit the property</h3>
+            <p>We measure the building and check it against the planning file and the drawings.</p>
           </li>
           <li class="step rc" style="--i:2">
             <figure><img src="/assets/img/step-3-map-edged-red.jpg" alt="" width="900" height="900" loading="lazy"></figure>
@@ -345,10 +378,10 @@
         <h2 class="h2 rc" id="office-h" style="--i:1">Also from the drawing office.</h2>
       </header>
       <ol class="office-list rv">
-        <li class="rc"><span class="n mono">05.1</span><h3>Land Registry mapping</h3><p>Compliant maps for first registration, transfers of part and title corrections.</p></li>
-        <li class="rc" style="--i:1"><span class="n mono">05.2</span><h3>Boundary clarification</h3><p>Measured surveys and reports when a boundary on the ground and on the map disagree.</p></li>
-        <li class="rc" style="--i:2"><span class="n mono">05.3</span><h3>Condition surveys</h3><p>Clear reports on a building's condition for lenders, buyers and due diligence.</p></li>
-        <li class="rc" style="--i:3"><span class="n mono">05.4</span><h3>Technical certification</h3><p>Certificates and opinions for solicitors and financial institutions.</p></li>
+        <li class="rc"><span class="n mono">05.1</span><h3>Land Registry mapping</h3><p>Provision of compliant mapping for land registration.</p></li>
+        <li class="rc" style="--i:1"><span class="n mono">05.2</span><h3>Boundary clarification</h3><p>Measured surveys to identify the precise location of property boundaries.</p></li>
+        <li class="rc" style="--i:2"><span class="n mono">05.3</span><h3>Condition surveys</h3><p>If you are purchasing a property, we can prepare a detailed structure assessment outlining the condition of the building.</p></li>
+        <li class="rc" style="--i:3"><span class="n mono">05.4</span><h3>Technical certification</h3><p>Compliance certification for solicitors and financial institutions.</p></li>
       </ol>
     </div>
   </section>
@@ -358,7 +391,7 @@
     <div class="wrap faq-grid">
       <div class="faq-side rv">
         <p class="kicker label rc"><span class="num">06</span><span class="tick"></span>Questions</p>
-        <h2 class="h2 rc" id="faq-h" style="--i:1">Straight answers.</h2>
+        <h2 class="h2 rc" id="faq-h" style="--i:1">Frequently Asked Questions</h2>
         <p class="lede rc" style="--i:2">Something else? Call Kevin on <a href="tel:+353862721126">086 272 1126</a>.</p>
       </div>
       <div class="faq-list">
@@ -380,11 +413,11 @@
         </div>
         <div class="qa">
           <button class="qa-q" type="button" aria-expanded="false" aria-controls="qa5" id="qa5-q"><span>What if an extension was built without permission?</span><span class="pm" aria-hidden="true"></span></button>
-          <div class="qa-a" id="qa5" role="region" aria-labelledby="qa5-q"><div><p>It's common, and it's usually fixable. Depending on the work, the route is an opinion of exemption, retention permission, or small works on site. We explain the options in plain words.</p></div></div>
+          <div class="qa-a" id="qa5" role="region" aria-labelledby="qa5-q"><div><p>It's common, and it's usually fixable. Depending on the work, the route is an opinion of exemption or application for retention permission. We explain the options in plain words.</p></div></div>
         </div>
         <div class="qa">
           <button class="qa-q" type="button" aria-expanded="false" aria-controls="qa6" id="qa6-q"><span>Do you work directly with law firms?</span><span class="pm" aria-hidden="true"></span></button>
-          <div class="qa-a" id="qa6" role="region" aria-labelledby="qa6-q"><div><p>Yes. Firms including Mason Hayes &amp; Curran and PwC Ireland have relied on our mapping and certificates for property transactions.</p></div></div>
+          <div class="qa-a" id="qa6" role="region" aria-labelledby="qa6-q"><div><p>Yes. Firms including Mason Hayes &amp; Curran and PwC Ireland have relied on our compliance certification and mapping.</p></div></div>
         </div>
       </div>
     </div>
