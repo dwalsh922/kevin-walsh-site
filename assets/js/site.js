@@ -1,4 +1,4 @@
-/* Kevin Walsh & Associates: the descent, the red line, the plan.
+/* Kevin Walsh & Associates: the red line, the plan.
    Plain JS. Everything that moves eases, rests when idle, and honours reduced motion.
    Shared by the home page and the service pages: every part checks its elements exist. */
 (() => {
@@ -7,26 +7,10 @@
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
   const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
-  const smoothstep = (p, e0, e1) => { const t = clamp((p - e0) / (e1 - e0), 0, 1); return t * t * (3 - 2 * t); };
-  const easeOut = t => 1 - Math.pow(1 - t, 3);
   const easeInOut = t => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
-  function rng(seed) { let s = seed >>> 0; return () => (s = (s * 1664525 + 1013904223) >>> 0) / 4294967296; }
   const RM = matchMedia('(prefers-reduced-motion: reduce)');
   const reduced = () => RM.matches;
   const onMQ = (m, fn) => (m.addEventListener ? m.addEventListener('change', fn) : m.addListener(fn));
-
-  requestAnimationFrame(() => document.body.classList.add('is-ready'));
-
-  /* The five static-hero gates. Character for character the same as the CSS. */
-  const GATES = [
-    '(max-width: 720px)',
-    '(orientation: portrait) and (max-width: 1024px)',
-    '(orientation: portrait) and (pointer: coarse)',
-    '(orientation: landscape) and (pointer: coarse) and (max-height: 560px)',
-    '(prefers-reduced-motion: reduce)'
-  ];
-  const MQLS = GATES.map(q => matchMedia(q));
-  const gated = () => MQLS.some(m => m.matches);
 
   /* =========================================================
      GLIDE: inertial page scroll for mouse and trackpad
@@ -130,383 +114,6 @@
     e.preventDefault();
     glide.to(el.getBoundingClientRect().top + scrollY, el);
   });
-
-  /* =========================================================
-     HERO: the descent onto one plot, then the red line
-     ========================================================= */
-  const hero = $('.hero');
-  const stage = $('.stage');
-  const hasFilm = !!(hero && stage && $('.hero-canvas', stage));
-  const FRAME_W = 1920, FRAME_H = 1080, ANCHOR_Y = 515;   // the plot's centre, kept on screen at every aspect
-  const FRAMES = 94;
-  const frameUrl = i => `/assets/frames/v2/f${String(i + 1).padStart(3, '0')}.webp`;
-  const POSTER_URL = '/assets/hero-poster.jpg';
-  const ENDING_URL = '/assets/hero-ending.jpg';
-
-  let scrubOn = false;
-  let enableScrub = () => {}, disableScrub = () => {}, heroResize = () => {};
-
-  if (hasFilm) {
-    const canvas = $('.hero-canvas', stage);
-    const poster = $('.poster', stage);
-    const posterEnd = $('.poster-end', stage);
-    const ring = $('.ring', stage);
-    const hud = $('.hud', stage);
-    const scaleEl = $('.hud .scale', stage);
-    const redline = $('.redline', stage);
-    const tag = $('.rl-tag', stage);
-
-    const bands = $$('.band', stage).map((el, i, arr) => ({
-      el, a: +el.dataset.a, b: +el.dataset.b, ramp: el.dataset.ramp ? +el.dataset.ramp : 0,
-      first: i === 0, last: i === arr.length - 1, op: -1, k: -1, vis: undefined, cta: null
-    }));
-
-    /* Split each band headline once: a hidden full sentence for screen readers,
-       plus word and character spans with seeded offsets for the entrances. */
-    function splitBand(el, seed, fx, spread) {
-      const r = rng(seed);
-      const full = el.textContent.replace(/\s+/g, ' ').trim();
-      const vis = document.createElement('span');
-      vis.className = 'vis sharp';
-      vis.setAttribute('aria-hidden', 'true');
-      const words = [], chars = [];
-      [...el.childNodes].forEach(node => {
-        if (node.nodeType === 1 && node.tagName === 'BR') { vis.appendChild(document.createElement('br')); return; }
-        const isEm = node.nodeType === 1 && node.tagName === 'EM';
-        node.textContent.split(/(\s+)/).forEach(tok => {
-          if (!tok) return;
-          if (/^\s+$/.test(tok)) { vis.appendChild(document.createTextNode(' ')); return; }
-          const w = document.createElement('span');
-          w.className = isEm ? 'w em' : 'w';
-          for (const ch of tok) {
-            const c = document.createElement('span');
-            c.className = 'c';
-            c.textContent = ch;
-            w.appendChild(c);
-            chars.push(c);
-          }
-          vis.appendChild(w);
-          words.push(w);
-        });
-      });
-      const sr = document.createElement('span');
-      sr.className = 'sr-only';
-      sr.textContent = full;
-      el.textContent = '';
-      el.append(sr, vis);
-
-      if (fx === 'focus') {
-        const soft = vis.cloneNode(true);
-        soft.className = 'vis soft';
-        el.appendChild(soft);
-      } else if (fx === 'grid') {
-        const n = chars.length || 1;
-        chars.forEach((c, i) => {
-          c.style.setProperty('--th', ((i / n) * spread + r() * 0.05).toFixed(3));
-          c.style.setProperty('--jx', ((r() < 0.5 ? -1 : 1) * (10 + r() * 16)).toFixed(1) + 'px');
-        });
-      } else {
-        const span = fx === 'baseline' ? 0.36 : 0.5;
-        const n = words.length;
-        words.forEach((w, i) => w.style.setProperty('--th', (n > 1 ? (i / (n - 1)) * span + r() * 0.02 : 0).toFixed(3)));
-      }
-    }
-    bands.forEach((b, i) => {
-      const head = $('.split', b.el);
-      const fx = ([...b.el.classList].find(c => c.startsWith('fx-')) || 'fx-drift').slice(3);
-      if (head) splitBand(head, 11 + i * 7, fx, +(b.el.dataset.spread || 0.45));
-    });
-
-    function heroProgress() {
-      const range = hero.offsetHeight - innerHeight;
-      if (range <= 0) return 0;
-      return clamp(-hero.getBoundingClientRect().top / range, 0, 1);
-    }
-
-    /* The film reaches its resting frame at 90% of the hero, easing in like an
-       arrival, and holds still while the red line draws around the plot. */
-    const FILM_END = 0.9, P0 = 0.68, S = 1 / (1 - (1 - P0) / 2);
-    function filmT(p) {
-      const q = clamp(p / FILM_END, 0, 1);
-      if (q <= P0) return S * q;
-      const d = q - P0;
-      return Math.min(1, S * (q - (d * d) / (2 * (1 - P0))));
-    }
-
-    /* One layout for the canvas, the posters and the red line: cover the stage,
-       centred across, and vertically as close to the plot's centre as the edges allow. */
-    let L = { s: 1, dx: 0, dy: 0, w: FRAME_W, h: FRAME_H, W: 1, H: 1 };
-    function measure() {
-      const W = stage.clientWidth || innerWidth, H = stage.clientHeight || innerHeight;
-      const s = Math.max(W / FRAME_W, H / FRAME_H);
-      const w = FRAME_W * s, h = FRAME_H * s;
-      const dx = (W - w) / 2;
-      const dy = clamp(H / 2 - ANCHOR_Y * s, H - h, 0);
-      L = { s, dx, dy, w, h, W, H };
-      redline.style.cssText = `left:${dx}px;top:${dy}px;width:${w}px;height:${h}px`;
-      const bg = `${w}px ${h}px`, pos = `${dx}px ${dy}px`;
-      poster.style.backgroundSize = bg; poster.style.backgroundPosition = pos;
-      posterEnd.style.backgroundSize = bg; posterEnd.style.backgroundPosition = pos;
-      // the tag sits just outside the plot's top-right corner
-      tag.style.left = `${dx + 1112 * s}px`;
-      tag.style.top = `${dy + 90 * s}px`;
-    }
-
-    /* Captions: opacity per band paced in scroll distance, assembly progress --k.
-       Every DOM write is delta-gated. */
-    let loadK = 0, lastEnd = -1, hudOff = null, lastLabel = '', lastLabelAt = 0, lastRl = -1, lastRt = -1;
-
-    function updateLabel(p, now, force) {
-      const t = filmT(p);
-      let v = 10000 * Math.pow(500 / 10000, t);
-      v = v > 2000 ? Math.round(v / 250) * 250 : Math.round(v / 50) * 50;
-      const text = '1:' + v.toLocaleString('en-IE');
-      if (!force && now - lastLabelAt < 100) return;
-      if (text === lastLabel) return;
-      lastLabel = text;
-      lastLabelAt = now;
-      scaleEl.textContent = text;
-    }
-
-    function updateCaptions(p, now = performance.now(), force = false) {
-      for (const b of bands) {
-        const len = b.b - b.a;
-        const f = Math.min(0.02, len / 3);
-        let op;
-        if ((!b.first && p < b.a) || (!b.last && p > b.b)) op = 0;
-        else op = (b.first ? 1 : smoothstep(p, b.a, b.a + f)) * (b.last ? 1 : 1 - smoothstep(p, b.b - f, b.b));
-        op = Math.round(op * 200) / 200;
-        const ramp = b.ramp || Math.min(0.025, len * 0.35);
-        let k = clamp((p - b.a) / ramp, 0, 1);
-        if (b.first) k = Math.max(k, loadK);
-        if (op !== b.op) {
-          b.op = op;
-          b.el.style.opacity = op;
-          const vis = op > 0.01;
-          if (vis !== b.vis) { b.vis = vis; b.el.style.visibility = vis ? 'visible' : 'hidden'; }
-        }
-        if (Math.abs(k - b.k) >= 0.008 || (k === 1 && b.k !== 1) || (k === 0 && b.k !== 0)) {
-          b.k = k;
-          b.el.style.setProperty('--k', k.toFixed(3));
-        }
-        if (b.last) {
-          const on = k > 0.9 && op > 0.5;
-          if (on !== b.cta) { b.cta = on; b.el.classList.toggle('cta-on', on); }
-        }
-      }
-      // THE RED LINE: draws once the film has come to rest
-      const rl = Math.round(easeInOut(clamp((p - 0.895) / 0.075, 0, 1)) * 400) / 400;
-      const rt = Math.round(clamp((p - 0.955) / 0.035, 0, 1) * 100) / 100;
-      if (rl !== lastRl) { lastRl = rl; stage.style.setProperty('--rl', rl); }
-      if (rt !== lastRt) { lastRt = rt; stage.style.setProperty('--rt', rt); }
-      updateLabel(p, now, force);
-      const off = p > 0.8;
-      if (off !== hudOff) { hudOff = off; hud.classList.toggle('off', off); }
-      if (filmFailed) {
-        const e = Math.round(smoothstep(p, 0.4, 0.85) * 100) / 100;
-        if (e !== lastEnd) { lastEnd = e; posterEnd.style.opacity = e; }
-      }
-    }
-
-    /* The film as a frame sequence drawn to a canvas, neighbouring frames blended. */
-    const imgs = new Array(FRAMES).fill(null);
-    const loaded = new Uint8Array(FRAMES);
-    const warmed = new Uint8Array(FRAMES);
-    const ctx2 = canvas.getContext('2d', { alpha: false });
-    let cw = 0, ch = 0, drawnF = -1, lastIdx = -1, lastF = 0;
-    let framesReady = false, filmFailed = false, framesStarted = false;
-    let loadedCount = 0, failedCount = 0, lastRing = 0, lastLoadAt = 0;
-
-    function sizeCanvas() {
-      measure();
-      const scale = Math.min(devicePixelRatio || 1, 1920 / Math.max(1, L.W), 2);
-      const w = Math.max(1, Math.round(L.W * scale)), h = Math.max(1, Math.round(L.H * scale));
-      if (w !== cw || h !== ch) { cw = canvas.width = w; ch = canvas.height = h; drawnF = -1; }
-    }
-    function nearestLoaded(i) {
-      if (loaded[i]) return i;
-      for (let d = 1; d < FRAMES; d++) {
-        if (i - d >= 0 && loaded[i - d]) return i - d;
-        if (i + d < FRAMES && loaded[i + d]) return i + d;
-      }
-      return -1;
-    }
-    function blit(img, alpha) {
-      const k = cw / L.W;
-      ctx2.globalAlpha = alpha;
-      ctx2.drawImage(img, L.dx * k, L.dy * k, L.w * k, L.h * k);
-    }
-    function warm(i, dir) {
-      for (let d = 1; d <= 6; d++) {
-        const j = i + d * dir;
-        if (j < 0 || j >= FRAMES || !loaded[j] || warmed[j]) continue;
-        warmed[j] = 1;
-        imgs[j].decode().catch(() => { warmed[j] = 0; });
-      }
-    }
-    function drawFrame(f, force) {
-      if (!framesReady) return;
-      f = clamp(f, 0, FRAMES - 1);
-      if (!force && Math.abs(f - drawnF) < 0.002) return;
-      const i0 = Math.floor(f), a = f - i0, i1 = Math.min(FRAMES - 1, i0 + 1);
-      const base = nearestLoaded(i0);
-      if (base < 0) return;
-      blit(imgs[base], 1);
-      if (a > 0.004 && base === i0 && i1 !== i0 && loaded[i1]) blit(imgs[i1], a);
-      ctx2.globalAlpha = 1;
-      drawnF = f;
-      const idx = Math.round(f);
-      if (idx !== lastIdx) { lastIdx = idx; stage.dataset.frame = idx; warm(idx, f >= lastF ? 1 : -1); }
-      lastF = f;
-    }
-
-    /* Coarse to fine: the ends and every 16th and 8th frame first, so the scrub works
-       within moments, then the gaps fill in. A stall before the first pass falls back. */
-    function startFrames() {
-      if (framesStarted) return;
-      framesStarted = true;
-      const order = [], seen = new Uint8Array(FRAMES);
-      const push = i => { if (i >= 0 && i < FRAMES && !seen[i]) { seen[i] = 1; order.push(i); } };
-      push(0); push(FRAMES - 1);
-      for (let i = 0; i < FRAMES; i += 16) push(i);
-      for (let i = 0; i < FRAMES; i += 8) push(i);
-      const readyCount = order.length;
-      for (const s of [4, 2, 1]) for (let i = 0; i < FRAMES; i += s) push(i);
-      let next = 0, active = 0;
-      lastLoadAt = performance.now();
-      const settle = () => {
-        if (loadedCount + failedCount < FRAMES) return;
-        ring.style.setProperty('--ld', 0);
-        stage.classList.add('film-loaded');
-        if (!framesReady) { if (loadedCount) makeReady(); else failFilm(); }
-      };
-      const pump = () => {
-        while (active < 6 && next < order.length) {
-          const i = order[next++];
-          active++;
-          const img = new Image();
-          img.decoding = 'async';
-          if ('fetchPriority' in img) img.fetchPriority = 'low';
-          img.onload = () => {
-            imgs[i] = img; loaded[i] = 1; loadedCount++; active--;
-            lastLoadAt = performance.now();
-            if (lastLoadAt - lastRing > 100) { lastRing = lastLoadAt; ring.style.setProperty('--ld', Math.round(126 * (1 - loadedCount / FRAMES))); }
-            if (!framesReady && loadedCount >= readyCount) makeReady();
-            else if (framesReady && Math.abs(i - fd) <= 1.5) drawFrame(fd, true);
-            pump(); settle();
-          };
-          img.onerror = () => { failedCount++; active--; pump(); settle(); };
-          img.src = frameUrl(i);
-        }
-      };
-      pump();
-      const watch = () => {
-        if (framesReady || filmFailed) return;
-        if (performance.now() - lastLoadAt > 20000) failFilm(); else setTimeout(watch, 2000);
-      };
-      setTimeout(watch, 2000);
-    }
-    function makeReady() {
-      if (framesReady || filmFailed) return;
-      framesReady = true;
-      sizeCanvas();
-      drawFrame(fd, true);
-      stage.classList.add('film-ready');
-      onScroll();
-    }
-    function failFilm() {
-      if (filmFailed || framesReady) return;
-      filmFailed = true;
-      ring.style.display = 'none';
-      stage.classList.add('film-failed');
-      posterEnd.style.backgroundImage = `url('${ENDING_URL}')`;
-      updateCaptions(shown, performance.now(), true);
-    }
-
-    /* Two eases, one loop that rests. */
-    let target = 0, shown = 0, fd = 0, rafId = null, lastTick = 0, heroOnScreen = true;
-    function tick(now) {
-      const dt = Math.min(100, now - (lastTick || now));
-      lastTick = now;
-      const ease = n => 1 - Math.pow(1 - n, dt / 16.667);
-      shown += (target - shown) * ease(0.1);
-      const resting = Math.abs(target - shown) < 0.0005;
-      if (resting) shown = target;
-      const exact = filmT(shown) * (FRAMES - 1);
-      const goal = resting ? Math.round(exact) : exact;
-      fd += (goal - fd) * ease(resting ? 0.18 : 0.5);
-      const settled = resting && Math.abs(goal - fd) < 0.01;
-      if (settled) fd = goal;
-      drawFrame(fd);
-      updateCaptions(shown, now, settled);
-      if (settled) { rafId = null; lastTick = 0; } else rafId = requestAnimationFrame(tick);
-    }
-    function onScroll() {
-      target = heroProgress();
-      if (rafId === null && heroOnScreen && scrubOn) rafId = requestAnimationFrame(tick);
-    }
-    new IntersectionObserver(es => {
-      heroOnScreen = es[0].isIntersecting;
-      if (heroOnScreen) onScroll();
-    }).observe(hero);
-
-    function startLoadRamp() {
-      let t0 = 0;
-      const step = now => {
-        if (!t0) t0 = now;
-        loadK = easeOut(clamp((now - t0) / 1600, 0, 1));
-        updateCaptions(shown, now, true);
-        if (loadK < 1) requestAnimationFrame(step);
-      };
-      let went = false;
-      const go = () => { if (!went) { went = true; requestAnimationFrame(step); } };
-      if (document.fonts && document.fonts.ready) document.fonts.ready.then(go);
-      setTimeout(go, 900);
-    }
-
-    let heroInit = false;
-    function initHeroOnce() {
-      if (heroInit) return;
-      heroInit = true;
-      measure();
-      poster.style.backgroundImage = `url('${POSTER_URL}')`;
-      const afterLoad = () => (document.readyState === 'complete' ? setTimeout(startFrames, 0) : addEventListener('load', () => setTimeout(startFrames, 0), { once: true }));
-      const img = new Image();
-      img.onload = afterLoad;
-      img.onerror = afterLoad;
-      img.src = POSTER_URL;
-      setTimeout(startFrames, 5000);
-      startLoadRamp();
-    }
-
-    enableScrub = () => {
-      if (scrubOn) return;
-      scrubOn = true;
-      initHeroOnce();
-      addEventListener('scroll', onScroll, { passive: true });
-      bands.forEach(b => { b.op = -1; b.k = -1; b.vis = undefined; b.cta = null; });
-      hudOff = null; lastLabel = ''; lastEnd = -1; lastRl = -1; lastRt = -1;
-      target = shown = heroProgress();
-      fd = filmT(shown) * (FRAMES - 1);
-      measure();
-      if (framesReady) { sizeCanvas(); drawFrame(fd, true); }
-      updateCaptions(shown, performance.now(), true);
-      onScroll();
-    };
-    disableScrub = () => {
-      if (!scrubOn) return;
-      scrubOn = false;
-      removeEventListener('scroll', onScroll);
-      if (rafId !== null) { cancelAnimationFrame(rafId); rafId = null; lastTick = 0; }
-    };
-    heroResize = () => { if (scrubOn) { sizeCanvas(); drawFrame(fd, true); onScroll(); } };
-  }
-
-  // The static hero's plate: the ending frame, loaded only when the static hero is showing.
-  const hsImg = $('.hs-img');
-  function armStaticPlate() {
-    if (hsImg && gated() && !hsImg.getAttribute('href')) hsImg.setAttribute('href', ENDING_URL);
-  }
 
   /* =========================================================
      Reveals, living elements, pause on hidden tabs
@@ -735,7 +342,6 @@
   addEventListener('resize', () => {
     measureHow();
     howLast = -1;
-    heroResize();
     onPageScroll();
   });
   addEventListener('load', () => { measureHow(); onPageScroll(); });
@@ -743,10 +349,6 @@
   /* =========================================================
      Live modes: the gates re-evaluate on rotate, resize and preference flips
      ========================================================= */
-  function applyHeroMode() {
-    if (gated()) { disableScrub(); armStaticPlate(); } else if (hasFilm) enableScrub();
-    onPageScroll();
-  }
   function pinToFinalStates() {
     pinned = true;
     howLast = -1;
@@ -762,17 +364,16 @@
     updateHowLine();
     updateVSteps();
   }
-  MQLS.forEach(m => onMQ(m, applyHeroMode));
   onMQ(RM, e => {
     applyGlide();
     if (e.matches) pinToFinalStates();
-    else { unpinFinalStates(); applyHeroMode(); }
+    else unpinFinalStates();
   });
   onMQ(FINE, applyGlide);
 
   measureHow();
   applyGlide();
-  applyHeroMode();
+  onPageScroll();
   if (reduced()) pinToFinalStates();
   pageFrame();
 })();
