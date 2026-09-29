@@ -121,16 +121,16 @@ main{position:relative;z-index:1}
 
 /* ---------- Hero: the plot, edged red (a composed still, complete in the first paint) ---------- */
 .hero{position:relative}
-.hero-grid{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr);gap:clamp(28px,5vw,80px);align-items:center;min-height:min(88svh,860px);padding:clamp(104px,15vh,140px) var(--gutter) clamp(40px,6vh,64px);max-width:calc(var(--wrap) + var(--gutter)*2);margin-inline:auto}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(28px,5vw,80px);align-items:center;min-height:min(88svh,860px);padding:clamp(104px,15vh,140px) var(--gutter) clamp(40px,6vh,64px);max-width:1920px;margin-inline:auto}
 .hero h1{display:flex;flex-direction:column;gap:1.1rem;font-weight:700}
 .hero h1 .kicker{font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;color:var(--t-ink-2);font-weight:400;line-height:1.6}
-.hero h1 .statement{font-family:var(--f-display);font-stretch:118%;font-weight:700;font-size:clamp(2.3rem,4.6vw,4.3rem);line-height:1.02;letter-spacing:-.024em;max-width:15ch;color:var(--t-ink)}
-.hs-sub{margin-top:1.3rem;font-size:clamp(1.08rem,1.3vw,1.25rem);line-height:1.55;color:#c9d2d6;max-width:46ch}
+.hero h1 .statement{font-family:var(--f-display);font-stretch:118%;font-weight:700;font-size:clamp(2.3rem,4.6vw,5.2rem);line-height:1.02;letter-spacing:-.024em;max-width:15ch;color:var(--t-ink)}
+.hs-sub{margin-top:1.3rem;font-size:clamp(1.08rem,1.3vw,1.4rem);line-height:1.55;color:#c9d2d6;max-width:46ch}
 .band-cta{margin-top:1.7rem;display:flex;gap:.7rem;flex-wrap:wrap}
 .hero .creds{margin-top:1.9rem}
-.hs-fig{justify-self:center;display:flex;flex-direction:column;gap:14px;max-width:100%}
-.plate{position:relative;height:min(64svh,590px);aspect-ratio:4/5;max-width:100%;border-radius:var(--radius);overflow:hidden;background:var(--ink-2);border:1px solid var(--hair-ink);box-shadow:0 40px 90px -50px rgba(0,0,0,.9)}
-.plate img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.hs-fig{justify-self:stretch;width:100%;display:flex;flex-direction:column;gap:14px}
+.plate{position:relative;width:100%;aspect-ratio:1/1;max-height:min(72svh,760px);border-radius:var(--radius);overflow:hidden;background:var(--ink-2);border:1px solid var(--hair-ink);box-shadow:0 40px 90px -50px rgba(0,0,0,.9)}
+.plate img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 22%}
 .chip{background:rgba(12,19,24,.6);border:1px solid rgba(167,179,185,.28);border-radius:10px;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);text-shadow:0 1px 3px rgba(6,11,15,.85)}
 .sw{width:18px;height:2px;background:var(--accent-line);flex:none}
 
@@ -147,7 +147,8 @@ main{position:relative;z-index:1}
 @media (max-width:900px){
   .hero-grid{grid-template-columns:minmax(0,1fr);min-height:0;padding-top:clamp(100px,14vh,128px)}
   .hs-fig{justify-self:start;width:100%;max-width:440px}
-  .plate{height:auto;width:100%}
+  .plate{aspect-ratio:4/5;max-height:none}
+  .plate img{object-position:50% 50%}
 }
 @media (max-width:640px){.hero h1 .statement{font-size:clamp(2.1rem,9.6vw,2.8rem)}.hero .band-cta{gap:.45rem}.hero .band-cta .btn{flex:1 1 auto;padding:.85rem .6rem;font-size:.86rem;white-space:nowrap}.hero .creds{gap:6px 16px;margin-top:1.5rem}.hero .creds li{font-size:.66rem}}
 
