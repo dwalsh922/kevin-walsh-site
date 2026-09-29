@@ -244,10 +244,11 @@
   /* =========================================================
      The quote form: the one call to action
      ========================================================= */
-  // DEPLOY STEP: paste a form service endpoint here (for example https://formspree.io/f/xxxxxxx).
-  // Until it is set, the button opens the visitor's email app with the request filled in, addressed to Kevin.
-  const FORM_ENDPOINT = '';
+  // Enquiries go through FormSubmit (formsubmit.co) straight to Kevin's inbox, with Reply set to the visitor.
+  // The first submission from a new web address sends a one-time "Activate form" email to that inbox;
+  // expect one more of those when the site moves to www.kevinwalshandassociates.com.
   const TO = 'kwa819@gmail.com';
+  const FORM_ENDPOINT = `https://formsubmit.co/ajax/${TO}`;
   const form = $('#quote-form');
   if (form) {
     const status = $('.form-status', form);
@@ -284,30 +285,38 @@
       status.classList.remove('err');
       if (!validate()) return;
       const data = new FormData(form);
-      if (data.get('_gotcha')) return;
-      const first = String(data.get('name')).trim().split(/\s+/)[0];
-      if (!FORM_ENDPOINT) {
-        const subject = `Quote request: ${data.get('need')}, ${data.get('address')}`;
-        const body = [
-          `Name: ${data.get('name')}`,
-          `Firm: ${data.get('firm') || '-'}`,
-          `Email: ${data.get('email')}`,
-          `Phone: ${data.get('phone') || '-'}`,
-          `Property: ${data.get('address')}`,
-          `Needs: ${data.get('need')}`,
-          `Closing date: ${data.get('closing') || '-'}`,
-          '',
-          String(data.get('message') || '')
-        ].join('\n');
-        location.href = `mailto:${TO}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-        status.textContent = 'Your email app should open with the request ready. Just press send.';
-        return;
-      }
+      if (data.get('_honey')) return;
+      const v = k => String(data.get(k) || '').trim();
+      const first = v('name').split(/\s+/)[0];
+      const payload = {
+        'Name': v('name'),
+        'Email': v('email'),
+        'Phone': v('phone') || '-',
+        'Firm': v('firm') || '-',
+        'Property address': v('address'),
+        'What they need': v('need'),
+        'Closing date': v('closing') || '-',
+        'Message': v('message') || '-',
+        'Sent from': location.pathname,
+        _subject: `Website quote request: ${v('need')}, ${v('address')}`,
+        _replyto: v('email'),
+        _template: 'table',
+        _captcha: 'false',
+        _honey: ''
+      };
       const btn = $('button[type="submit"]', form);
       btn.disabled = true;
+      btn.setAttribute('aria-busy', 'true');
+      status.textContent = 'Sending your request…';
       try {
-        const res = await fetch(FORM_ENDPOINT, { method: 'POST', body: data, headers: { Accept: 'application/json' } });
-        if (!res.ok) throw new Error('Form service said ' + res.status);
+        const res = await fetch(FORM_ENDPOINT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const out = await res.json().catch(() => ({}));
+        if (!res.ok || String(out.success) !== 'true') throw new Error(out.message || 'Form service said ' + res.status);
+        status.textContent = '';
         $('.fd-name', form).textContent = first ? `, ${first}` : '';
         $('.form-done', form).hidden = false;
         form.classList.add('sent');
@@ -316,6 +325,7 @@
         status.classList.add('err');
       } finally {
         btn.disabled = false;
+        btn.removeAttribute('aria-busy');
       }
     });
   }
