@@ -245,11 +245,11 @@
      The quote form: the one call to action
      ========================================================= */
   // Enquiries go through Web3Forms (web3forms.com) straight to Kevin's inbox, with Reply set to the visitor.
-  // DEPLOY STEP: paste the Web3Forms access key for kwa819@gmail.com here. The key is public by design.
-  // Until it is set, or if sending ever fails, the visitor gets the same request as a ready-to-send email.
+  // Access key for kwa819@gmail.com (public by design: it can only send to that inbox).
+  // If sending ever fails, the visitor gets the same request as a ready-to-send email instead.
   const TO = 'kwa819@gmail.com';
   const FORM_ENDPOINT = 'https://api.web3forms.com/submit';
-  const WEB3FORMS_KEY = '';
+  const WEB3FORMS_KEY = 'd126d0b0-9a7c-4eb4-8587-7989c34d2416';
   const form = $('#quote-form');
   if (form) {
     const status = $('.form-status', form);
