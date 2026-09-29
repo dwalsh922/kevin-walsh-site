@@ -244,11 +244,12 @@
   /* =========================================================
      The quote form: the one call to action
      ========================================================= */
-  // Enquiries go through FormSubmit (formsubmit.co) straight to Kevin's inbox, with Reply set to the visitor.
-  // The first submission from a new web address sends a one-time "Activate form" email to that inbox;
-  // expect one more of those when the site moves to www.kevinwalshandassociates.com.
+  // Enquiries go through Web3Forms (web3forms.com) straight to Kevin's inbox, with Reply set to the visitor.
+  // DEPLOY STEP: paste the Web3Forms access key for kwa819@gmail.com here. The key is public by design.
+  // Until it is set, or if sending ever fails, the visitor gets the same request as a ready-to-send email.
   const TO = 'kwa819@gmail.com';
-  const FORM_ENDPOINT = `https://formsubmit.co/ajax/${TO}`;
+  const FORM_ENDPOINT = 'https://api.web3forms.com/submit';
+  const WEB3FORMS_KEY = '';
   const form = $('#quote-form');
   if (form) {
     const status = $('.form-status', form);
@@ -289,21 +290,34 @@
       const v = k => String(data.get(k) || '').trim();
       const first = v('name').split(/\s+/)[0];
       const payload = {
-        'Name': v('name'),
-        'Email': v('email'),
+        'name': v('name'),
+        'email': v('email'),
         'Phone': v('phone') || '-',
         'Firm': v('firm') || '-',
         'Property address': v('address'),
         'What they need': v('need'),
         'Closing date': v('closing') || '-',
         'Message': v('message') || '-',
-        'Sent from': location.pathname,
-        _subject: `Website quote request: ${v('need')}, ${v('address')}`,
-        _replyto: v('email'),
-        _template: 'table',
-        _captcha: 'false',
-        _honey: ''
+        'Sent from': location.pathname
       };
+      const subject = `Website quote request: ${v('need')}, ${v('address')}`;
+      const mail = () => {
+        const body = Object.entries(payload).map(([k, val]) => `${k[0].toUpperCase() + k.slice(1)}: ${val}`).join('\n');
+        return `mailto:${TO}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      };
+      // Never lose an enquiry: offer the same request as a ready-to-send email instead.
+      const offerEmail = lead => {
+        status.textContent = lead;
+        const a = document.createElement('a');
+        a.href = mail();
+        a.textContent = 'Email it to Kevin instead';
+        status.append(a, ' (your request is already filled in), or call 086 272 1126.');
+      };
+      if (!WEB3FORMS_KEY) {
+        location.href = mail();
+        offerEmail('Your email app should open with the request ready, so just press send. If it didn’t open: ');
+        return;
+      }
       const btn = $('button[type="submit"]', form);
       btn.disabled = true;
       btn.setAttribute('aria-busy', 'true');
@@ -312,23 +326,16 @@
         const res = await fetch(FORM_ENDPOINT, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-          body: JSON.stringify(payload)
+          body: JSON.stringify({ access_key: WEB3FORMS_KEY, subject, from_name: 'Kevin Walsh & Associates website', ...payload })
         });
         const out = await res.json().catch(() => ({}));
-        if (!res.ok || String(out.success) !== 'true') throw new Error(out.message || 'Form service said ' + res.status);
+        if (!res.ok || out.success !== true) throw new Error(out.message || 'Form service said ' + res.status);
         status.textContent = '';
         $('.fd-name', form).textContent = first ? `, ${first}` : '';
         $('.form-done', form).hidden = false;
         form.classList.add('sent');
       } catch (_) {
-        // Never lose an enquiry: offer the same request as a ready-to-send email instead.
-        const body = Object.entries(payload).filter(([k]) => !k.startsWith('_')).map(([k, val]) => `${k}: ${val}`).join('\n');
-        const mail = `mailto:${TO}?subject=${encodeURIComponent(payload._subject)}&body=${encodeURIComponent(body)}`;
-        status.textContent = "That didn't send. ";
-        const a = document.createElement('a');
-        a.href = mail;
-        a.textContent = 'Email it to Kevin instead';
-        status.append(a, ' (your request is already filled in), or call 086 272 1126.');
+        offerEmail("That didn't send. ");
         status.classList.add('err');
       } finally {
         btn.disabled = false;
