@@ -323,11 +323,10 @@
       btn.setAttribute('aria-busy', 'true');
       status.textContent = 'Sending your request…';
       try {
-        const res = await fetch(FORM_ENDPOINT, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-          body: JSON.stringify({ access_key: WEB3FORMS_KEY, subject, from_name: 'Kevin Walsh & Associates website', ...payload })
-        });
+        // Plain form data (no custom content type), so the browser sends it without a CORS pre-check.
+        const fd = new FormData();
+        Object.entries({ access_key: WEB3FORMS_KEY, subject, from_name: 'Kevin Walsh & Associates website', ...payload }).forEach(([k, val]) => fd.append(k, val));
+        const res = await fetch(FORM_ENDPOINT, { method: 'POST', body: fd });
         const out = await res.json().catch(() => ({}));
         if (!res.ok || out.success !== true) throw new Error(out.message || 'Form service said ' + res.status);
         status.textContent = '';
