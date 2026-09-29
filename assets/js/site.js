@@ -321,7 +321,14 @@
         $('.form-done', form).hidden = false;
         form.classList.add('sent');
       } catch (_) {
-        status.textContent = `That didn't send. Please email ${TO} or call 086 272 1126.`;
+        // Never lose an enquiry: offer the same request as a ready-to-send email instead.
+        const body = Object.entries(payload).filter(([k]) => !k.startsWith('_')).map(([k, val]) => `${k}: ${val}`).join('\n');
+        const mail = `mailto:${TO}?subject=${encodeURIComponent(payload._subject)}&body=${encodeURIComponent(body)}`;
+        status.textContent = "That didn't send. ";
+        const a = document.createElement('a');
+        a.href = mail;
+        a.textContent = 'Email it to Kevin instead';
+        status.append(a, ' (your request is already filled in), or call 086 272 1126.');
         status.classList.add('err');
       } finally {
         btn.disabled = false;

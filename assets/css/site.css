@@ -336,6 +336,7 @@ main{position:relative;z-index:1}
 .hp{position:absolute!important;left:-9999px!important;width:1px;height:1px;opacity:0}
 .form-status{font-size:1rem;color:var(--t-paper)}
 .form-status.err{color:#a3261b}
+.form-status a{color:inherit;font-weight:600;text-decoration:underline;text-underline-offset:3px}
 .form-done{grid-column:1/-1;padding:10px 0}
 .form-done .big{font-family:var(--f-display);font-stretch:115%;font-weight:700;font-size:clamp(1.5rem,2.6vw,2.2rem);letter-spacing:-.02em;line-height:1.1}
 .form-done[hidden]{display:none}
