@@ -120,7 +120,7 @@
       <div class="sol-side rv">
         <p class="kicker label rc"><span class="num">01</span><span class="tick"></span>For solicitors</p>
         <h2 class="h2 rc" id="sol-h" style="--i:1">Buying, selling, or re-mortgaging a property</h2>
-        <p class="lede rc" style="--i:2">Solicitors and lenders will require certification confirming that a property complies with planning permission and building regulations. Kevin Walsh &amp; Associates can provide all necessary certification.</p>
+        <p class="lede rc" style="--i:2">Solicitors and lenders will require certification confirming that a property complies with planning legislation and building regulations. Kevin Walsh &amp; Associates can provide all necessary certification.</p>
       </div>
       <div class="req rv">
         <ol class="req-list">
@@ -260,18 +260,15 @@
             <g class="zone" data-z="windows">
               <rect class="z-fill" x="184" y="380" width="46" height="18"/>
               <rect class="z-fill" x="336" y="380" width="46" height="18"/>
-              <rect class="p-win" x="190" y="386" width="34" height="8"/>
-              <rect class="p-win" x="342" y="386" width="34" height="8"/>
-              <path class="z-line" pathLength="1" d="M182 378 H232 V400 H182 Z M334 378 H384 V400 H334 Z"/>
-            </g>
-            <g class="zone" data-z="rooflights">
               <rect class="z-fill" x="348" y="278" width="22" height="22"/>
               <rect class="z-fill" x="336" y="336" width="22" height="22"/>
+              <rect class="p-win" x="190" y="386" width="34" height="8"/>
+              <rect class="p-win" x="342" y="386" width="34" height="8"/>
               <rect class="p-win" x="352" y="282" width="14" height="14"/>
               <path class="p-soft" d="M352 296 L366 282"/>
               <rect class="p-win" x="340" y="340" width="14" height="14"/>
               <path class="p-soft" d="M340 354 L354 340"/>
-              <path class="z-line" pathLength="1" d="M346 276 H372 V302 H346 Z M334 334 H360 V360 H334 Z"/>
+              <path class="z-line" pathLength="1" d="M182 378 H232 V400 H182 Z M334 378 H384 V400 H334 Z M346 276 H372 V302 H346 Z M334 334 H360 V360 H334 Z"/>
             </g>
             <path class="p-north" d="M556 470 l8 -26 l8 26 l-8 -7 z"/>
           </svg>
@@ -291,28 +288,26 @@
             <button type="button" class="tog" data-z="entrance" aria-pressed="false"><span class="box" aria-hidden="true"></span>Site entrance</button>
             <button type="button" class="tog" data-z="surface" aria-pressed="false"><span class="box" aria-hidden="true"></span>Front garden paved over</button>
             <button type="button" class="tog" data-z="shed" aria-pressed="false"><span class="box" aria-hidden="true"></span>Garden shed</button>
-            <button type="button" class="tog" data-z="canopy" aria-pressed="false"><span class="box" aria-hidden="true"></span>External canopy</button>
-            <button type="button" class="tog" data-z="windows" aria-pressed="false"><span class="box" aria-hidden="true"></span>Additional windows</button>
-            <button type="button" class="tog" data-z="rooflights" aria-pressed="false"><span class="box" aria-hidden="true"></span>Roof lights</button>
+            <button type="button" class="tog" data-z="canopy" aria-pressed="false"><span class="box" aria-hidden="true"></span>External canopies/awnings</button>
+            <button type="button" class="tog" data-z="windows" aria-pressed="false"><span class="box" aria-hidden="true"></span>Additional windows/roof lights</button>
           </fieldset>
 
           <div class="needs rc" style="--i:1">
             <h3 class="label">What the buyer's solicitor will ask for</h3>
             <p class="needs-empty">Nothing marked yet. Tap the plan or the list.</p>
             <ul class="needs-list" aria-live="polite">
-              <li data-z="ext" hidden><strong>Rear extension</strong><span>Planning permission, or an opinion that it was exempt. Plus an opinion on compliance with Building Regulations.</span></li>
-              <li data-z="attic" hidden><strong>Attic conversion</strong><span>An opinion on compliance with Building Regulations. If the roof shape changed, an opinion on planning too.</span></li>
-              <li data-z="room" hidden><strong>Garden room</strong><span>An opinion that it was exempt from planning, or the permission for it.</span></li>
-              <li data-z="porch" hidden><strong>Front porch</strong><span>An opinion that it was exempt, or the permission for it.</span></li>
-              <li data-z="garage" hidden><strong>Garage conversion</strong><span>An opinion on planning, exempt or permitted, and on Building Regulations.</span></li>
-              <li data-z="internal" hidden><strong>Internal alterations</strong><span>Usually exempt from planning. If walls were taken out or rooms rearranged, an opinion on compliance with Building Regulations, including the structure.</span></li>
-              <li data-z="elements" hidden><strong>Changes to building elements</strong><span>New windows or doors, a new roof, or external insulation. An opinion on whether it needed planning, since changes to how the house looks can need permission, plus an opinion on Building Regulations.</span></li>
-              <li data-z="entrance" hidden><strong>Changes to the site entrance</strong><span>Planning permission, or an opinion that it was exempt. Widening an entrance onto a public road usually needs permission, and dishing the kerb needs the council's consent.</span></li>
-              <li data-z="surface" hidden><strong>Front garden paved over</strong><span>An opinion that it was exempt. Replacing grass with tarmac or concrete is often exempt on its own, but not when the entrance was widened to go with it.</span></li>
-              <li data-z="shed" hidden><strong>Garden shed</strong><span>An opinion that it was exempt from planning, or the permission for it.</span></li>
-              <li data-z="canopy" hidden><strong>External canopy</strong><span>An opinion that it was exempt from planning, or the permission for it.</span></li>
-              <li data-z="windows" hidden><strong>Additional windows</strong><span>An opinion on whether the new openings needed planning permission, plus an opinion on compliance with Building Regulations.</span></li>
-              <li data-z="rooflights" hidden><strong>Roof lights</strong><span>An opinion on whether they needed planning permission, plus an opinion on compliance with Building Regulations.</span></li>
+              <li data-z="ext" hidden><strong>Rear extension</strong><span>Opinion that the development is either in compliance with planning permission or constitutes exempt development.</span></li>
+              <li data-z="attic" hidden><strong>Attic conversion</strong><span>An opinion on compliance with Building Regulations. If the roof shape changed, an opinion on planning status also.</span></li>
+              <li data-z="room" hidden><strong>Garden room</strong><span>An opinion on whether works are exempt development or in compliance with planning.</span></li>
+              <li data-z="porch" hidden><strong>Front porch</strong><span>An opinion on whether works are exempt development or in compliance with planning.</span></li>
+              <li data-z="garage" hidden><strong>Garage conversion</strong><span>An opinion on planning and building regulation status.</span></li>
+              <li data-z="internal" hidden><strong>Internal alterations</strong><span>Usually exempt from planning. However, if walls were removed or rooms rearranged, an opinion on compliance with Building Regulations, with regard to structure.</span></li>
+              <li data-z="elements" hidden><strong>Changes to building elements</strong><span>An opinion on whether works are exempt development or in compliance with planning.</span></li>
+              <li data-z="entrance" hidden><strong>Changes to the site entrance</strong><span>An opinion on whether works are exempt development or in compliance with planning. Note, widening an entrance onto a public road and dishing the kerb requires permission.</span></li>
+              <li data-z="surface" hidden><strong>Front garden paved over</strong><span>An opinion on whether works are exempt development or in compliance with planning.</span></li>
+              <li data-z="shed" hidden><strong>Garden shed</strong><span>An opinion on whether works are exempt development or in compliance with planning.</span></li>
+              <li data-z="canopy" hidden><strong>External canopies/awnings</strong><span>An opinion on whether works are exempt development or in compliance with planning.</span></li>
+              <li data-z="windows" hidden><strong>Additional windows/roof lights</strong><span>An opinion on whether works are exempt development or in compliance with planning.</span></li>
             </ul>
             <a class="btn btn-accent needs-cta" href="#quote" id="mark-cta" hidden>Request these certificates <span class="arr" aria-hidden="true">→</span></a>
           </div>
@@ -358,7 +353,7 @@
             <span class="node" aria-hidden="true"></span>
             <span class="n mono">04</span>
             <h3>Ready for the contract pack</h3>
-            <p>Signed documents by email, in the form solicitors expect.</p>
+            <p>Signed documents issued to the solicitor by email together with hard copy originals issued in the post.</p>
           </li>
         </ol>
       </div>

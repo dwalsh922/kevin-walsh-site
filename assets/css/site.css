@@ -289,6 +289,7 @@ main{position:relative;z-index:1}
 .office-list p{color:var(--t-paper-2);font-size:1.02rem}
 
 /* ---------- 07 FAQ ---------- */
+.how + .faq{border-top:1px solid var(--hair-ink)}
 .faq-grid{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:clamp(32px,6vw,100px);align-items:start}
 .faq-side{position:sticky;top:120px}
 .qa{border-bottom:1px solid var(--hair-ink)}
